@@ -1,0 +1,27 @@
+{
+  "name": "ssml-emotion-injector",
+  "version": "1.0.0",
+  "description": "European Portuguese (pt-PT) emotional prosody for the Web Speech API: turns plain text + emotion annotations into acoustically calibrated SSML.",
+  "type": "module",
+  "main": "./dist/ssml-emotion-injector.esm.js",
+  "module": "./dist/ssml-emotion-injector.esm.js",
+  "unpkg": "./dist/ssml-emotion-injector.min.js",
+  "jsdelivr": "./dist/ssml-emotion-injector.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ssml-emotion-injector.esm.js",
+      "default": "./dist/ssml-emotion-injector.esm.js"
+    }
+  },
+  "files": ["dist", "src", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "esbuild src/index.js --format=esm --bundle --outfile=dist/ssml-emotion-injector.esm.js && esbuild src/index.js --format=esm --bundle --minify --outfile=dist/ssml-emotion-injector.esm.min.js && esbuild src/index.js --format=iife --global-name=SSMLEmotionInjector --bundle --minify --outfile=dist/ssml-emotion-injector.min.js",
+    "test": "node test/smoke.mjs"
+  },
+  "keywords": ["ssml", "tts", "text-to-speech", "web-speech-api", "prosody", "european-portuguese", "pt-PT", "emotion", "affective", "speech-synthesis", "p-tobi"],
+  "author": "Davide Cogliati",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/D4VE99/ssml-emotion-injector.git" },
+  "homepage": "https://github.com/D4VE99/ssml-emotion-injector#readme",
+  "devDependencies": { "esbuild": "^0.25.0" }
+}

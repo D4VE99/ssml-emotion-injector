@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSML Emotion Injector — demo</title>
+<!--
+  Demo locale. Per provare la versione pubblicata su jsDelivr, sostituisci
+  la riga <script> qui sotto con:
+  <script src="https://cdn.jsdelivr.net/gh/D4VE99/ssml-emotion-injector@v1.0.0/dist/ssml-emotion-injector.min.js"></script>
+-->
+<script src="./dist/ssml-emotion-injector.min.js"></script>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;line-height:1.5}
+  textarea{width:100%;font-family:ui-monospace,monospace;font-size:13px;padding:10px}
+  button{padding:8px 16px;font-size:14px;cursor:pointer;margin-top:8px}
+  pre{background:#f4f4f6;padding:12px;border-radius:8px;overflow:auto;font-size:12px}
+  label{font-weight:600;display:block;margin-top:14px}
+</style>
+</head>
+<body>
+  <h1>SSML Emotion Injector — demo</h1>
+  <p>Genera SSML dal testo + annotazioni, e lo legge con la Web Speech API (voce pt-PT del sistema).</p>
+
+  <label>Testo (pt-PT)</label>
+  <textarea id="txt" rows="5">Esta mesa é de madeira.
+Queres um gelado?
+Não acredito que isto aconteceu!
+Que desilusão, não era isto que esperava.</textarea>
+
+  <label>Annotazioni (JSON array)</label>
+  <textarea id="ann" rows="6">[
+  { "da": "Queres", "a": "gelado?", "emozione": "pergunta" },
+  { "da": "Não acredito", "a": "aconteceu!", "emozione": "euforia" },
+  { "da": "Que desilusão", "a": "esperava.", "emozione": "desapontado" }
+]</textarea>
+
+  <button onclick="run()">⚡ Genera SSML</button>
+  <button onclick="speak()">▶ Leggi (Web Speech API)</button>
+
+  <label>Output SSML</label>
+  <pre id="out"></pre>
+
+<script>
+function build(){
+  const text = document.getElementById('txt').value;
+  const ann = JSON.parse(document.getElementById('ann').value);
+  return SSMLEmotionInjector.generate(text, ann, { lang: "pt-PT" });
+}
+function run(){
+  try { document.getElementById('out').textContent = build(); }
+  catch(e){ document.getElementById('out').textContent = "Errore: " + e.message; }
+}
+function speak(){
+  let ssml;
+  try { ssml = build(); } catch(e){ alert(e.message); return; }
+  document.getElementById('out').textContent = ssml;
+  const u = new SpeechSynthesisUtterance(ssml); // engine SSML-aware richiesto (es. Firefox patchato)
+  u.lang = "pt-PT";
+  const v = speechSynthesis.getVoices().find(x => x.lang.toLowerCase().startsWith("pt-pt"));
+  if (v) u.voice = v;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+run();
+</script>
+</body>
+</html>
